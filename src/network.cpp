@@ -13,22 +13,24 @@ namespace metro {
 
 namespace {
 
-const nlohmann::json& require(const nlohmann::json& obj, const char* key, const std::string& where) {
+// Returns a pointer (not a reference) into obj: GCC's -Wdangling-reference
+// would otherwise flag callers because `where` is often a temporary string.
+const nlohmann::json* require(const nlohmann::json& obj, const char* key, const std::string& where) {
     auto it = obj.find(key);
     if (it == obj.end() || it->is_null())
         throw DataError(where + ": missing \"" + key + "\"");
-    return *it;
+    return &*it;
 }
 
 std::string require_string(const nlohmann::json& obj, const char* key, const std::string& where) {
-    const auto& v = require(obj, key, where);
+    const auto& v = *require(obj, key, where);
     if (!v.is_string() || v.get<std::string>().empty())
         throw DataError(where + ": \"" + key + "\" must be a non-empty string");
     return v.get<std::string>();
 }
 
 double require_coord(const nlohmann::json& obj, const char* key, const std::string& where, double limit) {
-    const auto& v = require(obj, key, where);
+    const auto& v = *require(obj, key, where);
     if (!v.is_number())
         throw DataError(where + ": \"" + key + "\" must be a number");
     double d = v.get<double>();
@@ -61,8 +63,8 @@ Network Network::from_json(const std::string& text, const NetworkOptions& option
     }
     if (!root.is_object())
         throw DataError("top level must be an object");
-    const auto& jstations = require(root, "stations", "network");
-    const auto& jlines = require(root, "lines", "network");
+    const auto& jstations = *require(root, "stations", "network");
+    const auto& jlines = *require(root, "lines", "network");
     if (!jstations.is_array() || !jlines.is_array())
         throw DataError("\"stations\" and \"lines\" must be arrays");
 
@@ -101,7 +103,7 @@ Network Network::from_json(const std::string& text, const NetworkOptions& option
         line.name = jl.value("name", "Line " + line.id);
         line.name_fa = jl.value("name_fa", "");
         line.color = jl.value("color", "#888888");
-        const auto& seq = require(jl, "stations", where);
+        const auto& seq = *require(jl, "stations", where);
         if (!seq.is_array() || seq.size() < 2)
             throw DataError(where + ": needs at least two stations");
         for (const auto& sid : seq) {
