@@ -74,7 +74,7 @@
         .on("click", () => pick(s.id))
         .addTo(networkLayer);
     }
-    map.fitBounds(L.latLngBounds(data.stations.map((s) => [s.lat, s.lon])), { padding: [20, 20] });
+    map.fitBounds(L.latLngBounds(data.stations.map((s) => [s.lat, s.lon])), { padding: [20, 20], animate: false });
   }
 
   // ---- picking stations ---------------------------------------------------
@@ -164,7 +164,7 @@
         .bindTooltip("Change: " + s.name_en).addTo(routeLayer);
     });
     for (const id of [r.from.id, r.to.id]) markers[id].bringToFront();
-    map.fitBounds(L.latLngBounds(pts), { padding: [40, 40] });
+    map.fitBounds(L.latLngBounds(pts), { padding: [40, 40], maxZoom: 14, animate: false });
 
     const h = document.createElement("p");
     h.className = "summary";
