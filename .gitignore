@@ -1,0 +1,18 @@
+# Build output
+build/
+build-*/
+cmake-build-*/
+site/metro.js
+site/metro.wasm
+site/data/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Editors / OS
+.DS_Store
+.vscode/
+.idea/
+.claude/

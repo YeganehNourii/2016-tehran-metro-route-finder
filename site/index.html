@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tehran Metro Route Finder</title>
+  <meta name="description" content="Fastest route on the Tehran Metro. Dijkstra's algorithm in C++17, compiled to WebAssembly, on a Leaflet map with OpenStreetMap data.">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="panel">
+      <header>
+        <h1>Tehran Metro <span>route finder</span></h1>
+        <p class="lead">Pick two stations, type them or click them on the map. The route is computed by
+          <a href="https://github.com/YeganehNourii/2016-tehran-metro-route-finder">C++ code</a>
+          (Dijkstra's algorithm) compiled to WebAssembly, running in your browser.</p>
+      </header>
+
+      <form id="form" autocomplete="off">
+        <label>From <input id="from" list="station-list" placeholder="e.g. Tajrish / تجریش" disabled></label>
+        <button id="swap" type="button" title="Swap" aria-label="Swap from and to" disabled>⇅</button>
+        <label>To <input id="to" list="station-list" placeholder="e.g. Imam Khomeini" disabled></label>
+        <datalist id="station-list"></datalist>
+        <label class="slider">Line-change penalty: <strong id="penalty-val">5 min</strong>
+          <input id="penalty" type="range" min="0" max="15" value="5" disabled></label>
+        <button id="go" type="submit" class="primary" disabled>Find route</button>
+      </form>
+
+      <div id="status" class="status" role="status">Loading the route engine…</div>
+      <section id="result" aria-live="polite"></section>
+
+      <footer>
+        Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL).
+        Travel times are estimates from distance.<br>
+        Origin: BSc courses Advanced Programming and Discrete Mathematics (2016), rebuilt in 2026 · MIT License
+      </footer>
+    </aside>
+    <div id="map" aria-label="Map of the Tehran Metro"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="metro.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
